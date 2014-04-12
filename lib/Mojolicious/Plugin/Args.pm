@@ -1,6 +1,6 @@
 package Mojolicious::Plugin::Args;
 use Mojo::Base 'Mojolicious::Plugin';
-use Mojo::JSON qw/decode_json/;
+use Mojo::JSON 'decode_json';
 
 sub register {
     my ( $self, $app, $opts ) = @_;
