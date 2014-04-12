@@ -8,7 +8,7 @@ Mojolicious::Plugin::Args - gives you back the request parameters as a simple %a
 
 =head1 VERSION
 
-version 0.01
+version 0.02
 
 =head1 SYNOPSIS
 
