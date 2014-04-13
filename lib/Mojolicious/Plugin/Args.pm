@@ -10,7 +10,9 @@ sub register {
     $app->helper( args => sub {
         my $c = shift;
         my $stash = $c->stash;
-        my %args; $args{ $_ } = $c->param( $_ ) for $c->param;
+        my %args;
+        $args{ $_ } = $c->param( $_ ) for $c->param;
+        $args{ $_ } = $c->stash( $_ ) for grep { defined $stash->{ $_ } } keys %args;
         my $type = $c->req->headers->header( 'Content-Type' );
         if ( ( $c->req->method ne 'GET' and $type and $type =~ 'application/json' ) or
              ( $c->req->method eq 'GET' and defined $stash->{format} and $stash->{format} eq 'json' and defined $args{json} ) ) {
