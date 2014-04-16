@@ -10,9 +10,10 @@ sub register {
     $app->helper( args => sub {
         my $c = shift;
         my $stash = $c->stash;
-        my %args;
-        $args{ $_ } = $c->param( $_ ) for $c->param;
-        $args{ $_ } = $c->stash( $_ ) for grep { defined $stash->{ $_ } } keys %args;
+        my @param = $c->param;
+        my ( %args, %save );
+        $args{ $_ } = $c->param( $_ ) for @param;
+        $save{ $_ } = $stash->{args}{ $_ } for grep { exists $stash->{args} and defined $stash->{args}{ $_ } } keys %args;
         my $type = $c->req->headers->header( 'Content-Type' );
         if ( ( $c->req->method ne 'GET' and $type and $type =~ 'application/json' ) or
              ( $c->req->method eq 'GET' and defined $stash->{format} and $stash->{format} eq 'json' and defined $args{json} ) ) {
@@ -25,6 +26,7 @@ sub register {
             } if $want_detail;
             $args{ $_ } = $json->{ $_ } for @json;
         }
+        %args = ( %args, %save ); # this allows interception and override from route conditions that want to validate/modify and/or hooks
         $stash->{args} = \%args;
         return wantarray ? %{ $stash->{args} } : $stash->{args};
     } );
