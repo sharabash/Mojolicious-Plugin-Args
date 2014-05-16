@@ -29,7 +29,7 @@ sub register {
         %args = ( %args, %save ); # this allows interception and override from route conditions that want to validate/modify and/or hooks
         $stash->{args} = \%args;
         return wantarray ? %{ $stash->{args} } : $stash->{args};
-    } );
+    } ) unless $app->renderer->helpers->{args};
 }
 
 # ABSTRACT: gives you back the request parameters as a simple %args hash, even if it's posted in json.
